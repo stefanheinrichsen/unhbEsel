@@ -81,11 +81,7 @@ char colorMap[] = { 0x00, 0x00, 0x00,
                     0xaf, 0xaa, 0xb9,
                     0xf5, 0xf4, 0xeb };
                     
-RgbColor[16] c;
-
-for(char i=0; i<16; i++) {
-  c[i] = new RgbColor(i*3; i*3+1; i*3+2);
-}
+RgbColor *c[16];
 
 // Define Pin for Sensor - I use GPIO0, wich is D3 on WEMOS
 // #define DHTPIN 0
@@ -100,6 +96,9 @@ const uint8_t DotDataPin = 4;
 
 // for software bit bang
 NeoPixelBus<DotStarBgrFeature, DotStarMethod> strip(PixelCount, DotClockPin, DotDataPin);
+
+// ToDo for global Brightness setting
+//NeoPixelBrightnessBus<NeoGrbFeature, Neo800KbpsMethod> strip(pixelCount, pixelPin);
 
 // for hardware SPI (best performance but must use hardware pins)
 //NeoPixelBus<DotStarBgrFeature, DotStarSpiMethod> strip(PixelCount);
@@ -118,10 +117,10 @@ RgbColor black(0);
 // for use with RGB DotStars when using the luminance/brightness global value
 // note that its range is only 0 - 31 (31 is full bright) and
 // also note that it is not useful for POV displays as it will cause more flicker
-RgbwColor redL(colorSaturation, 0, 0, 16); // use white value to store luminance
-RgbwColor greenL(0, colorSaturation, 0, 16); // use white value to store luminance
-RgbwColor blueL(0, 0, colorSaturation, 16); // use white value to store luminance
-RgbwColor whiteL(255, 255, 255, colorSaturation / 8); // luminance is only 0-31
+//RgbwColor redL(colorSaturation, 0, 0, 16); // use white value to store luminance
+//RgbwColor greenL(0, colorSaturation, 0, 16); // use white value to store luminance
+//RgbwColor blueL(0, 0, colorSaturation, 16); // use white value to store luminance
+//RgbwColor whiteL(255, 255, 255, colorSaturation / 8); // luminance is only 0-31
 
 void setup()
 {
@@ -139,16 +138,24 @@ void setup()
 
   Serial.println();
   Serial.println("Running...");
+
+  for(int n=0; n<16; n++) {
+     c[n] = new RgbColor(n*3, n*3+1, n*3+2);
+  }
 }
 
 
 void loop()
-{
+{  
+  Serial.println("Entering loop ...");
+  
+  Serial.println("All off ...");
   // turn off the pixels
   for (int n = 0; n < strip.PixelCount(); n++) {
     strip.SetPixelColor(n, black);
   }
 
+  Serial.println("Animation test ...");
   // set the colors,
   int brigtness = 32;
   
@@ -167,11 +174,21 @@ void loop()
     }
     strip.Show(); delay(20);
   }
-  delay(3000);
+  delay(5000);
 
-  Serial.println("Off ...");
+  Serial.println("Colormap test ...");
 
-  // turn off the pixels
+  for(int n=0; n<strip.PixelCount()/2; n++) {
+    strip.SetPixelColor(n, *c[3]);
+    //strip.SetPixelColor(n, c[(test2[n]>>4)]  );
+    //strip.SetPixelColor(n, c[(test2[n]&0x0F]));
+  }
+  strip.Show(); 
+
+  delay(5000);
+  Serial.println("Loop ende ...");
+
+  // turn off the pixelsstrip.SetPixelColor(n, c[(test2[n]>>4)]  );
   //for(int n=0; n<strip.PixelCount(); n++) {
   //  strip.SetPixelColor(n, black);
   // }
