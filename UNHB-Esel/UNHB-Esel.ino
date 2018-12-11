@@ -8,6 +8,7 @@
 #include <ESP8266WiFi.h>
 #include <NeoPixelBus.h>
 #include <NeoPixelBrightnessBus.h>
+#include "defaults.h"
 
 char test[][64] = { { 0, 0, 1, 1, 1, 1, 0, 0,
                       0, 1, 0, 0, 0, 0, 1, 0,
@@ -62,23 +63,6 @@ char test2[] =  { 0x01, 0x23, 0x45, 0x67,
                   0xCC, 0xDD, 0xEE, 0xFF,
                   0xFE, 0xDC, 0xBA, 0x98,
                   0x76, 0x54, 0x32, 0x10 };
-
-char colorMap[] = { 0x00, 0x00, 0x00,
-                    0x19, 0x10, 0x28,
-                    0x46, 0xaf, 0x45, 
-                    0xa1, 0xd6, 0x85,
-                    0x45, 0x3e, 0x78,
-                    0x76, 0x64, 0xfe,
-                    0x83, 0x31, 0x29,
-                    0x9e, 0xc2, 0xe8,
-                    0xdc, 0x53, 0x4b,
-                    0xe1, 0x8d, 0x79,
-                    0xd6, 0xb9, 0x7b,
-                    0xe9, 0xd8, 0xa1,
-                    0x21, 0x6c, 0x4b,
-                    0xd3, 0x65, 0xc8,
-                    0xaf, 0xaa, 0xb9,
-                    0xf5, 0xf4, 0xeb };
                     
 RgbColor *c[16];
 RgbColor black(0);
@@ -88,7 +72,6 @@ const uint16_t PixelCount = 64; // Currently we have a 8x8 matrix connected
 // make sure to set this to the correct pins
 // SPI Hardware Pins: CLK=GPIO14=Pin12=D5 (orange), MOSI=GPIO13=Pin13=D7 (yellow)
 NeoPixelBrightnessBus<DotStarBgrFeature, DotStarSpiMethod> strip(PixelCount);
-
 
 void setup() {
   Serial.begin(115200);
@@ -105,11 +88,17 @@ void setup() {
   strip.Show();
 
   Serial.println();
+
+  loadColorMap(colorMap);
+  
   Serial.println("Running...");
 
-  // loading ColorMap into color objects
+}
+
+// loading ColorMap into color objects
+void loadColorMap(uint8_t cmap[]) {
   for(int n=0; n<16; n++) {
-     c[n] = new RgbColor(colorMap[n*3], colorMap[n*3+1], colorMap[n*3+2]);
+     c[n] = new RgbColor(cmap[n*3], cmap[n*3+1], cmap[n*3+2]);
   }
 }
 
