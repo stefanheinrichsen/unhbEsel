@@ -10,50 +10,7 @@
 #include <NeoPixelBrightnessBus.h>
 #include "defaults.h"
 
-uint8_t test[][64] = { { 0, 0, 1, 1, 1, 1, 0, 0,
-                      0, 1, 0, 0, 0, 0, 1, 0,
-                      1, 0, 0, 0, 0, 0, 0, 1,
-                      1, 0, 0, 0, 1, 1, 0, 1,
-                      1, 0, 0, 0, 1, 1, 0, 1,
-                      1, 0, 0, 0, 0, 0, 0, 1,
-                      0, 1, 0, 0, 0, 0, 1, 0,
-                      0, 0, 1, 1, 1, 1, 0, 0 },
 
-                    { 0, 0, 1, 1, 1, 1, 0, 0,
-                      0, 1, 1, 1, 1, 1, 1, 0,
-                      1, 0, 0, 0, 0, 0, 0, 1,
-                      1, 0, 0, 0, 1, 1, 0, 1,
-                      1, 0, 0, 0, 1, 1, 0, 1,
-                      1, 0, 0, 0, 0, 0, 0, 1,
-                      0, 1, 1, 1, 1, 1, 1, 0,
-                      0, 0, 1, 1, 1, 1, 0, 0 },
-
-                    { 0, 0, 0, 0, 0, 0, 0, 0,
-                      0, 0, 1, 1, 1, 1, 0, 0,
-                      0, 1, 1, 1, 1, 1, 1, 0,
-                      1, 0, 0, 0, 0, 0, 0, 1,
-                      1, 0, 0, 0, 0, 0, 0, 1,
-                      0, 1, 1, 1, 1, 1, 1, 0,
-                      0, 0, 1, 1, 1, 1, 0, 0,
-                      0, 0, 0, 0, 0, 0, 0, 0 },
-                      
-                    { 0, 0, 0, 0, 0, 0, 0, 0,
-                      0, 0, 0, 0, 0, 0, 0, 0,
-                      0, 1, 1, 1, 1, 1, 1, 0,
-                      1, 1, 1, 1, 1, 1, 1, 1,
-                      1, 1, 1, 1, 1, 1, 1, 1,
-                      0, 1, 1, 1, 1, 1, 1, 0,
-                      0, 0, 0, 0, 0, 0, 0, 0,
-                      0, 0, 0, 0, 0, 0, 0, 0 },
-                       
-                    { 0, 0, 0, 0, 0, 0, 0, 0,
-                      0, 0, 0, 0, 0, 0, 0, 0,
-                      0, 0, 0, 0, 0, 0, 0, 0,
-                      1, 1, 1, 1, 1, 1, 1, 1,
-                      1, 1, 1, 1, 1, 1, 1, 1,
-                      0, 0, 0, 0, 0, 0, 0, 0,
-                      0, 0, 0, 0, 0, 0, 0, 0,
-                      0, 0, 0, 0, 0, 0, 0, 0 } };
 
 char test2[] =  { 0x01, 0x23, 0x45, 0x67,
                   0x89, 0xAB, 0xCD, 0xEF,
@@ -111,17 +68,21 @@ void loop() {
 
   Serial.println("Animation test ...");
   for(int frame=0; frame<5; frame++) {
-    for(int n=0; n<strip.PixelCount(); n++) {
-       if(test[frame][n]) strip.SetPixelColor(n, RgbColor(255));
-       else strip.SetPixelColor(n, RgbColor(0));
+    for(int n=0; n<strip.PixelCount()/8; n++) {
+       for(int i=0; i<8; i++) {
+         if((eye_blink[frame][n])&(1<<i)) strip.SetPixelColor(n*8+i, RgbColor(255));
+         else strip.SetPixelColor(n*8+i, RgbColor(0));
+       }
     }
     strip.Show(); delay(20);
   }
   delay(100);
   for(int frame=3; frame>=0; frame--) {
-    for(int n=0; n<strip.PixelCount(); n++) {
-       if(test[frame][n]) strip.SetPixelColor(n, RgbColor(255));
-       else strip.SetPixelColor(n, RgbColor(0));
+    for(int n=0; n<strip.PixelCount()/8; n++) {
+       for(int i=0; i<8; i++) {
+         if((eye_blink[frame][n])&(1<<i)) strip.SetPixelColor(n*8+i, RgbColor(255));
+         else strip.SetPixelColor(n*8+i, RgbColor(0));
+       }
     }
     strip.Show(); delay(20);
   }
