@@ -10,7 +10,7 @@
 #include <NeoPixelBrightnessBus.h>
 #include "defaults.h"
 
-char test[][64] = { { 0, 0, 1, 1, 1, 1, 0, 0,
+uint8_t test[][64] = { { 0, 0, 1, 1, 1, 1, 0, 0,
                       0, 1, 0, 0, 0, 0, 1, 0,
                       1, 0, 0, 0, 0, 0, 0, 1,
                       1, 0, 0, 0, 1, 1, 0, 1,
@@ -78,12 +78,11 @@ void setup() {
   while (!Serial); // wait for serial attach
 
   Serial.println();
-  Serial.println("Initializing...");
-  Serial.flush();
+  Serial.println("Initializing..."); Serial.flush();
 
   // this resets all the neopixels to an off state
   strip.Begin();
-  strip.SetBrightness(64);
+  strip.SetBrightness(brightness);
   strip.ClearTo(black);
   strip.Show();
 
