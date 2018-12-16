@@ -28,7 +28,8 @@ const uint16_t PixelCount = 64; // Currently we have a 8x8 matrix connected
 
 // make sure to set this to the correct pins
 // SPI Hardware Pins: CLK=GPIO14=Pin12=D5 (orange), MOSI=GPIO13=Pin13=D7 (yellow)
-NeoPixelBrightnessBus<DotStarBgrFeature, DotStarSpiMethod> strip(PixelCount);
+//NeoPixelBrightnessBus<DotStarBgrFeature, DotStarSpiMethod> strip(PixelCount);
+NeoPixelBus<DotStarBgrFeature, DotStarSpiMethod> strip(PixelCount);
 
 void setup() {
   Serial.begin(115200);
@@ -39,7 +40,7 @@ void setup() {
 
   // this resets all the neopixels to an off state
   strip.Begin();
-  strip.SetBrightness(brightness);
+  //strip.SetBrightness(brightness);
   strip.ClearTo(black);
   strip.Show();
 
@@ -64,9 +65,19 @@ void playBwAnimation(int animDelay, uint8_t anim[][8]) {
   for(int frame=0; frame<7; frame++) {
     for(int n=0; n<strip.PixelCount()/8; n++) {
        for(int i=0; i<8; i++) {
-         if((anim[frame][n])&(1<<i)) strip.SetPixelColor(n*8+i, RgbColor(255));
+         if((anim[frame][n])&(1<<i)) strip.SetPixelColor(n*8+i, RgbColor(128));
          else strip.SetPixelColor(n*8+i, RgbColor(0));
        }
+    }
+    strip.Show(); delay(animDelay);
+  }
+}
+
+void playMapAnimation(int animDelay, uint8_t anim[][32]) {
+ for(int frame=0; frame<9; frame++) {
+    for(int n=0; n<strip.PixelCount()/2; n++) {
+      strip.SetPixelColor( 2*n  , *c[(anim[frame][n]>>4  )] );
+      strip.SetPixelColor( 2*n+1, *c[(anim[frame][n]&0x0F)] );
     }
     strip.Show(); delay(animDelay);
   }
@@ -80,7 +91,7 @@ void loop() {
   strip.ClearTo(black);
 
   Serial.println("Animation test ...");
-  playBwAnimation(50, eye_move_cr); delay(3000);
+/*playBwAnimation(50, eye_move_cr); delay(3000);
   playBwAnimation(50, eye_blink_r); delay(5000);
   playBwAnimation(50, eye_blink_r); delay(3000);
   playBwAnimation(50, eye_move_rc); delay(3000);
@@ -89,7 +100,9 @@ void loop() {
   playBwAnimation(50, eye_blink_c); delay(3000);
   playBwAnimation(50, eye_move_cl); delay(3000);
   playBwAnimation(50, eye_blink_l); delay(2000);
-  playBwAnimation(50, eye_move_lc); delay(3000);
+  playBwAnimation(50, eye_move_lc); delay(3000);*/
+
+  playMapAnimation(150, terminator);delay(3000);
 
 /*  Serial.println("Colormap test ...");
   strip.ClearTo(black);
