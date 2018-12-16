@@ -58,6 +58,19 @@ void loadColorMap(uint8_t cmap[]) {
   }
 }
 
+// play a given sub-animation
+void playBwAnimation(int animDelay, uint8_t anim[][8]) {
+  
+  for(int frame=0; frame<7; frame++) {
+    for(int n=0; n<strip.PixelCount()/8; n++) {
+       for(int i=0; i<8; i++) {
+         if((anim[frame][n])&(1<<i)) strip.SetPixelColor(n*8+i, RgbColor(255));
+         else strip.SetPixelColor(n*8+i, RgbColor(0));
+       }
+    }
+    strip.Show(); delay(animDelay);
+  }
+}
 
 void loop() {  
   Serial.println("Entering loop ...");
@@ -67,35 +80,25 @@ void loop() {
   strip.ClearTo(black);
 
   Serial.println("Animation test ...");
-  for(int frame=0; frame<5; frame++) {
-    for(int n=0; n<strip.PixelCount()/8; n++) {
-       for(int i=0; i<8; i++) {
-         if((eye_blink[frame][n])&(1<<i)) strip.SetPixelColor(n*8+i, RgbColor(255));
-         else strip.SetPixelColor(n*8+i, RgbColor(0));
-       }
-    }
-    strip.Show(); delay(20);
-  }
-  delay(100);
-  for(int frame=3; frame>=0; frame--) {
-    for(int n=0; n<strip.PixelCount()/8; n++) {
-       for(int i=0; i<8; i++) {
-         if((eye_blink[frame][n])&(1<<i)) strip.SetPixelColor(n*8+i, RgbColor(255));
-         else strip.SetPixelColor(n*8+i, RgbColor(0));
-       }
-    }
-    strip.Show(); delay(20);
-  }
-  delay(2000);
-  
-  Serial.println("Colormap test ...");
+  playBwAnimation(50, eye_move_cr); delay(3000);
+  playBwAnimation(50, eye_blink_r); delay(5000);
+  playBwAnimation(50, eye_blink_r); delay(3000);
+  playBwAnimation(50, eye_move_rc); delay(3000);
+  playBwAnimation(50, eye_blink_c); delay(3000);
+  playBwAnimation(50, eye_blink_c); delay(4000);
+  playBwAnimation(50, eye_blink_c); delay(3000);
+  playBwAnimation(50, eye_move_cl); delay(3000);
+  playBwAnimation(50, eye_blink_l); delay(2000);
+  playBwAnimation(50, eye_move_lc); delay(3000);
+
+/*  Serial.println("Colormap test ...");
   strip.ClearTo(black);
   for(int n=0; n<strip.PixelCount()/2; n++) {
     strip.SetPixelColor( 2*n  , *c[(test2[n]>>4  )] );
     strip.SetPixelColor( 2*n+1, *c[(test2[n]&0x0F)] );
     strip.Show(); delay(1000);
   }
-  delay(10000);
+  delay(10000);*/
 
   Serial.println("Loop end ...");
 }
