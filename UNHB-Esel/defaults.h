@@ -108,7 +108,7 @@ uint8_t terminator[][32] = { {
 }
 };
 
-uint8_t brightness = 64;
+uint8_t brightness = 24;
 
 uint8_t eye_blink_c[][8] = { 
 {

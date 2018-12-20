@@ -10,21 +10,10 @@
 #include <NeoPixelBrightnessBus.h>
 #include "defaults.h"
 
-
-
-char test2[] =  { 0x01, 0x23, 0x45, 0x67,
-                  0x89, 0xAB, 0xCD, 0xEF,
-                  0x00, 0x11, 0x22, 0x33,
-                  0x44, 0x55, 0x66, 0x77,
-                  0x88, 0x99, 0xAA, 0xBB,
-                  0xCC, 0xDD, 0xEE, 0xFF,
-                  0xFE, 0xDC, 0xBA, 0x98,
-                  0x76, 0x54, 0x32, 0x10 };
-                    
 RgbColor *c[16];
 RgbColor black(0);
 
-const uint16_t PixelCount = 64; // Currently we have a 8x8 matrix connected
+const uint16_t PixelCount = 128; // Currently we have a 2x 8x8 matrix connected
 
 // make sure to set this to the correct pins
 // SPI Hardware Pins: CLK=GPIO14=Pin12=D5 (orange), MOSI=GPIO13=Pin13=D7 (yellow)
@@ -63,21 +52,30 @@ void loadColorMap(uint8_t cmap[]) {
 void playBwAnimation(int animDelay, uint8_t anim[][8]) {
   
   for(int frame=0; frame<7; frame++) {
-    for(int n=0; n<strip.PixelCount()/8; n++) {
+    for(int n=0; n<strip.PixelCount()/16; n++) {
        for(int i=0; i<8; i++) {
-         if((anim[frame][n])&(1<<i)) strip.SetPixelColor(n*8+i, RgbColor(128));
-         else strip.SetPixelColor(n*8+i, RgbColor(0));
+         if((anim[frame][n])&(1<<i)) {
+            strip.SetPixelColor(i*8+n, RgbColor(brightness));
+            strip.SetPixelColor(i*8+n+64, RgbColor(brightness));
+         }
+         else {
+          strip.SetPixelColor(i*8+n, RgbColor(0));
+          strip.SetPixelColor(i*8+n+64, RgbColor(0));
+         }
        }
     }
     strip.Show(); delay(animDelay);
   }
 }
 
+
 void playMapAnimation(int animDelay, uint8_t anim[][32]) {
  for(int frame=0; frame<9; frame++) {
-    for(int n=0; n<strip.PixelCount()/2; n++) {
+    for(int n=0; n<strip.PixelCount()/4; n++) {
       strip.SetPixelColor( 2*n  , *c[(anim[frame][n]>>4  )] );
       strip.SetPixelColor( 2*n+1, *c[(anim[frame][n]&0x0F)] );
+      strip.SetPixelColor( 64+2*n  , *c[(anim[frame][n]>>4  )] );
+      strip.SetPixelColor( 64+2*n+1, *c[(anim[frame][n]&0x0F)] );
     }
     strip.Show(); delay(animDelay);
   }
@@ -91,7 +89,7 @@ void loop() {
   strip.ClearTo(black);
 
   Serial.println("Animation test ...");
-/*playBwAnimation(50, eye_move_cr); delay(3000);
+  playBwAnimation(50, eye_move_cr); delay(3000);
   playBwAnimation(50, eye_blink_r); delay(5000);
   playBwAnimation(50, eye_blink_r); delay(3000);
   playBwAnimation(50, eye_move_rc); delay(3000);
@@ -100,9 +98,14 @@ void loop() {
   playBwAnimation(50, eye_blink_c); delay(3000);
   playBwAnimation(50, eye_move_cl); delay(3000);
   playBwAnimation(50, eye_blink_l); delay(2000);
-  playBwAnimation(50, eye_move_lc); delay(3000);*/
+  playBwAnimation(50, eye_move_lc); delay(3000);
 
-  playMapAnimation(150, terminator);delay(3000);
+  /*playMapAnimation(150, terminator);delay(3000);*/
+
+/*  for(int n=0; n<strip.PixelCount(); n++) {
+    strip.SetPixelColor(n, 20 );
+    strip.Show(); delay(100);
+  }*/
 
 /*  Serial.println("Colormap test ...");
   strip.ClearTo(black);
