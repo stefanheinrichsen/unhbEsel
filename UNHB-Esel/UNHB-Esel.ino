@@ -9,6 +9,9 @@
 #include <NeoPixelBus.h>
 #include <NeoPixelBrightnessBus.h>
 #include "defaults.h"
+#include <FS.h>
+
+char* filename = "/Terminator2.c";
 
 RgbColor *c[16];
 RgbColor black(0);
@@ -17,27 +20,35 @@ const uint16_t PixelCount = 128; // Currently we have a 2x 8x8 matrix connected
 
 // make sure to set this to the correct pins
 // SPI Hardware Pins: CLK=GPIO14=Pin12=D5 (orange), MOSI=GPIO13=Pin13=D7 (yellow)
-//NeoPixelBrightnessBus<DotStarBgrFeature, DotStarSpiMethod> strip(PixelCount);
-NeoPixelBus<DotStarBgrFeature, DotStarSpiMethod> strip(PixelCount);
+NeoPixelBrightnessBus<DotStarBgrFeature, DotStarSpiMethod> strip(PixelCount);
+//NeoPixelBus<DotStarBgrFeature, DotStarSpiMethod> strip(PixelCount);
 
 void setup() {
   Serial.begin(115200);
   while (!Serial); // wait for serial attach
 
   Serial.println();
-  Serial.println("Initializing..."); Serial.flush();
+  Serial.println("Initializing everything..."); Serial.flush();
 
   // this resets all the neopixels to an off state
+  Serial.println("Switching off all LEDs");
   strip.Begin();
-  //strip.SetBrightness(brightness);
+  strip.SetBrightness(brightness);
   strip.ClearTo(black);
   strip.Show();
 
+  //Initialize File System
+  if(SPIFFS.begin()) {
+    Serial.println("SPIFFS Initialisierung....OK");
+  } else {
+    Serial.println("SPIFFS Initialisierung...Fehler!");
+  }
+ 
   Serial.println();
-
+  Serial.println("Loading default color map");
   loadColorMap(colorMap);
   
-  Serial.println("Running...");
+  Serial.println("\nSwitch to running...");
 
 }
 
@@ -88,7 +99,11 @@ void loop() {
   Serial.println("All off ...");
   strip.ClearTo(black);
 
-  Serial.println("Animation test ...");
+  Serial.print("Framecounter of file: ");
+  playFile(filename, 100);
+  
+
+/*  Serial.println("Animation test ...");
   playBwAnimation(50, eye_move_cr); delay(3000);
   playBwAnimation(50, eye_blink_r); delay(5000);
   playBwAnimation(50, eye_blink_r); delay(3000);
@@ -98,7 +113,7 @@ void loop() {
   playBwAnimation(50, eye_blink_c); delay(3000);
   playBwAnimation(50, eye_move_cl); delay(3000);
   playBwAnimation(50, eye_blink_l); delay(2000);
-  playBwAnimation(50, eye_move_lc); delay(3000);
+  playBwAnimation(50, eye_move_lc); delay(3000);*/
 
   /*playMapAnimation(150, terminator);delay(3000);*/
 
