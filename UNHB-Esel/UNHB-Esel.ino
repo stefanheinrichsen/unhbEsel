@@ -99,15 +99,15 @@ void loop() {
   Serial.println("All off ...");
   strip.ClearTo(black);
 
-  Serial.print("Framecounter of file: ");
   playFile("/Center.c",2000);
   playFile("/Blink_center.c", 100);
   playFile("/Move_left.c", 100);
   playFile("/Blink_left.c", 100);
   playFile("/Move_left_center.c", 100);
   playFile("/Blink_LSD_start.c", 100);
-  playFile("/Blink_LSD.c", 100);
-  playFile("/Blink_LSD.c", 100);
+  playFile("/LSD.c", 100);
+  playFile("/LSD.c", 120);
+  playFile("/LSD.c", 100);
   playFile("/Blink_LSD_end.c", 100);
   playFile("/Blink_center.c", 100);
   playFile("/Move_right.c", 100);

@@ -8,14 +8,11 @@ int getFileFrames(char* file) {
     Serial.println("Cannot open file!");
     return -1;
   } else {
-      Serial.println("Reading file and trying to find frame counter...");
       
       while(f.available() && n<0) {
         line = f.readStringUntil('\n');
         n = line.lastIndexOf("FRAME_COUNT");
       }
-      Serial.println("Frame Counter found at this line:");
-      Serial.println(line);
       String strFrameNumber = line.substring(n+12);
       result = strFrameNumber.toInt();
   }
@@ -56,7 +53,8 @@ void playFile(char* file, int framespeed) {
       }
       strip.Show();
       delay(framespeed);
-      line = f.readStringUntil('\n'); line = f.readStringUntil('\n');
+      
+      if(frame<frameNumber-1) line = f.readStringUntil('\n'); line = f.readStringUntil('\n');
       for(int i=0; i<64; i++) {
         delete anim[i];
       }
