@@ -155,7 +155,6 @@ void playWideFile(char* file, int framespeed) {
             uint32_t rgb = strtol(rgbStr.c_str(), NULL, 16);
             anim[i*8+j] = new RgbColor(rgb & 0xFF, rgb>>8 & 0xFF, rgb>>16);
             strip.SetPixelColor( i*8+j     , *anim[i*8+j]);
-            strip.SetPixelColor( 64+i*8+j  , *anim[i*8+j]);
           }
         line = f.readStringUntil('\n');
       }
@@ -163,7 +162,7 @@ void playWideFile(char* file, int framespeed) {
       delay(framespeed);
       
       if(frame<frameNumber-1) line = f.readStringUntil('\n'); line = f.readStringUntil('\n');
-      for(int i=0; i<64; i++) {
+      for(int i=0; i<128; i++) {
         delete anim[i];
       }
     }

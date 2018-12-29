@@ -93,6 +93,7 @@ void playMapAnimation(int animDelay, uint8_t anim[][32]) {
 }
 
 void loop() {  
+  int aniSpeed=110;
   Serial.println("Entering loop ...");
 
   // turn off the pixels
@@ -100,21 +101,24 @@ void loop() {
   strip.ClearTo(black);
 
   playFile("/Center.c",2000);
-  playFile("/Blink_center.c", 100);
-  playFile("/Move_left.c", 100);
-  playFile("/Blink_left.c", 100);
-  playFile("/Move_left_center.c", 100);
-  playFile("/Blink_LSD_start.c", 100);
-  playFile("/LSD.c", 100);
-  playFile("/LSD.c", 120);
-  playFile("/LSD.c", 100);
-  playFile("/Blink_LSD_end.c", 100);
-  playFile("/Blink_center.c", 100);
-  playFile("/Move_right.c", 100);
-  playFile("/Blink_right.c", 100);
-  playFile("/Move_right_center.c", 100);
-  playLRFile("/Blink_center_getAngry.c", "/Blink_center_getAngry.c", 100);
-  playWideFile("/WideTest.c", 300);
+  playFile("/Blink_center.c", aniSpeed);
+  playFile("/Move_left.c", aniSpeed);
+  playFile("/Blink_left.c", aniSpeed);
+  playFile("/Move_left_center.c", aniSpeed);
+  playFile("/Center.c",2000);
+  playFile("/Blink_LSD_start.c", aniSpeed);
+  playFile("/LSD.c", aniSpeed);
+  playFile("/LSD.c", aniSpeed-40);
+  playFile("/LSD.c", aniSpeed-80);   playFile("/LSD.c", aniSpeed-80);
+  playFile("/LSD.c", aniSpeed-40);
+  playFile("/LSD.c", aniSpeed);
+  playFile("/Blink_LSD_end.c", aniSpeed);
+  playFile("/Center.c",1000);
+  playFile("/Blink_center.c", aniSpeed);
+  playFile("/Move_right.c", aniSpeed);
+  playFile("/Blink_right.c", aniSpeed);
+  playFile("/Move_right_center.c", aniSpeed);
+  playWideFile("/Blink_center_getAngry_wide2.c", aniSpeed);
 
 /*Serial.println("Animation test ...");
   playBwAnimation(50, eye_move_cr); delay(3000);
