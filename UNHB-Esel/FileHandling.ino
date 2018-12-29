@@ -61,23 +61,70 @@ void playFile(char* file, int framespeed) {
     }
   }
   f.close();
+}
 
-  /*Serial.println(frameNumber);
-  for(int frame=0; frame<frameNumber; frame++) {
-    //Serial.print("Sending Frame: "); Serial.println(frame);
-    for(int i=0; i<strip.PixelCount()/2; i++) {
-      strip.SetPixelColor( i     , *anim[frame][i]);
-      strip.SetPixelColor( 64+i  , *anim[frame][i]);
-    }
-    strip.Show();
-    delay(framespeed);
-  }*/
+void playLRFile(char* lfile, char* rfile, int framespeed) {
+  int leftFrameNumber  = getFileFrames(lfile);
+  int rightFrameNumber = getFileFrames(rfile);
+  int n = -1;
+  RgbColor *lanim[64];
+  RgbColor *ranim[64];;
 
-  /*for(int frame=0; frame<frameNumber; frame++) {
-    for(int j=0; j<8; j++) {
-      for(int i=0; i<8; i++) {
-        delete anim[frame][i*8+j];
-        }
+  File lf = SPIFFS.open(lfile, "r");
+  File rf = SPIFFS.open(rfile, "r");
+  
+  String lline, rline;
+  char rgbChar[8];
+  String rgbStr;
+  uint32_t rgb;
+
+  if(leftFrameNumber != rightFrameNumber) { Serial.println("Frame mismatch for playLRFile"); return; }
+  
+  // load file into array
+  if (!lf | !rf) {
+    Serial.println("Cannot open any of the left-/rightfile!");
+    return;
+  } else {
+      // forward to first hex number
+      while(lf.available() && n<0) {
+        lline = lf.readStringUntil('\n');
+        n = lline.lastIndexOf("0x");
       }
-    }*/  
+      n=-1;
+      while(rf.available() && n<0) {
+        rline = rf.readStringUntil('\n');
+        n = rline.lastIndexOf("0x");
+      }
+      
+      for(int frame=0; frame<leftFrameNumber; frame++) {
+        for(int j=0; j<8; j++) {
+          for(int i=0; i<8; i++) {
+            rgbStr=lline.substring(4+i*12,4+i*12+6);
+            rgb = strtol(rgbStr.c_str(), NULL, 16);
+            lanim[i*8+j] = new RgbColor(rgb & 0xFF, rgb>>8 & 0xFF, rgb>>16);
+            strip.SetPixelColor( i*8+j     , *lanim[i*8+j]);
+
+            rgbStr=rline.substring(4+i*12,4+i*12+6);
+            rgb = strtol(rgbStr.c_str(), NULL, 16);
+            ranim[i*8+j] = new RgbColor(rgb & 0xFF, rgb>>8 & 0xFF, rgb>>16);
+            strip.SetPixelColor( 64+i*8+j     , *ranim[i*8+j]);
+          }
+        lline = lf.readStringUntil('\n');
+        rline = rf.readStringUntil('\n');
+      }
+      strip.Show();
+      delay(framespeed);
+      
+      if(frame<leftFrameNumber-1) { 
+        lline = lf.readStringUntil('\n'); lline = lf.readStringUntil('\n');
+        rline = rf.readStringUntil('\n'); rline = rf.readStringUntil('\n');
+      }
+      for(int i=0; i<64; i++) {
+        delete lanim[i];
+        delete ranim[i];
+      }
+    }
+  }
+  lf.close();
+  rf.close(); 
 }

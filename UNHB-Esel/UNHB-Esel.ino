@@ -113,10 +113,10 @@ void loop() {
   playFile("/Move_right.c", 100);
   playFile("/Blink_right.c", 100);
   playFile("/Move_right_center.c", 100);
-  playFile("/Blink_center_getAngry.c", 100);
+  playLRFile("/Blink_center_getAngry.c", "/Blink_center_getAngry.c", 100);
   
 
-/*  Serial.println("Animation test ...");
+/*Serial.println("Animation test ...");
   playBwAnimation(50, eye_move_cr); delay(3000);
   playBwAnimation(50, eye_blink_r); delay(5000);
   playBwAnimation(50, eye_blink_r); delay(3000);
@@ -126,23 +126,8 @@ void loop() {
   playBwAnimation(50, eye_blink_c); delay(3000);
   playBwAnimation(50, eye_move_cl); delay(3000);
   playBwAnimation(50, eye_blink_l); delay(2000);
-  playBwAnimation(50, eye_move_lc); delay(3000);*/
-
-  /*playMapAnimation(150, terminator);delay(3000);*/
-
-/*  for(int n=0; n<strip.PixelCount(); n++) {
-    strip.SetPixelColor(n, 20 );
-    strip.Show(); delay(100);
-  }*/
-
-/*  Serial.println("Colormap test ...");
-  strip.ClearTo(black);
-  for(int n=0; n<strip.PixelCount()/2; n++) {
-    strip.SetPixelColor( 2*n  , *c[(test2[n]>>4  )] );
-    strip.SetPixelColor( 2*n+1, *c[(test2[n]&0x0F)] );
-    strip.Show(); delay(1000);
-  }
-  delay(10000);*/
+  playBwAnimation(50, eye_move_lc); delay(3000);
+  playMapAnimation(150, terminator);delay(3000);*/
 
   Serial.println("Loop end ...");
 }
