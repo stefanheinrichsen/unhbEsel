@@ -8,10 +8,10 @@
 #include <ESP8266WiFi.h>
 #include <NeoPixelBus.h>
 #include <NeoPixelBrightnessBus.h>
-#include "defaults.h"
 #include <FS.h>
+#include "defaults.h"
 
-char* filename = "/Terminator2.c";
+char* filename = "/Blink_center_getAngry.c";
 
 RgbColor *c[16];
 RgbColor black(0);
@@ -100,7 +100,20 @@ void loop() {
   strip.ClearTo(black);
 
   Serial.print("Framecounter of file: ");
-  playFile(filename, 100);
+  playFile("/Center.c",2000);
+  playFile("/Blink_center.c", 100);
+  playFile("/Move_left.c", 100);
+  playFile("/Blink_left.c", 100);
+  playFile("/Move_left_center.c", 100);
+  playFile("/Blink_LSD_start.c", 100);
+  playFile("/Blink_LSD.c", 100);
+  playFile("/Blink_LSD.c", 100);
+  playFile("/Blink_LSD_end.c", 100);
+  playFile("/Blink_center.c", 100);
+  playFile("/Move_right.c", 100);
+  playFile("/Blink_right.c", 100);
+  playFile("/Move_right_center.c", 100);
+  playFile("/Blink_center_getAngry.c", 100);
   
 
 /*  Serial.println("Animation test ...");
