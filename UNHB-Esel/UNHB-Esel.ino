@@ -114,7 +114,7 @@ void loop() {
   playFile("/Blink_right.c", 100);
   playFile("/Move_right_center.c", 100);
   playLRFile("/Blink_center_getAngry.c", "/Blink_center_getAngry.c", 100);
-  
+  playWideFile("/WideTest.c", 300);
 
 /*Serial.println("Animation test ...");
   playBwAnimation(50, eye_move_cr); delay(3000);
